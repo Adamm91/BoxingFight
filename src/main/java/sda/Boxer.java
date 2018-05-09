@@ -1,14 +1,27 @@
 package sda;
 
-import jdk.nashorn.internal.ir.Block;
-
 import java.util.Random;
 
 public class Boxer implements IFighter {
     private String name;
     private int hp;
+    private final double maxHp;
     private int strange;
     private int stamina = 30;
+
+    public Boxer(String name, int hp, int strange) throws WrongParameterException {
+        validateParameters(name, hp, strange);
+        this.name = name;
+        this.hp = hp;
+        this.strange = strange;
+        this.maxHp = hp;
+    }
+
+    private void validateParameters(String name, int hp, int strange) throws WrongParameterException {
+        if (name == null || name.length() == 0) throw new WrongParameterException("Wrong name");
+        if (hp <= 0) throw new WrongParameterException("Wrong HP value");
+        if (strange <= 0) throw new WrongParameterException("Wrong Strange value");
+    }
 
     public void setStamina(int stamina) {
         this.stamina = stamina;
@@ -30,27 +43,14 @@ public class Boxer implements IFighter {
         setStamina(getStamina() - stamina);
     }
 
-    public Boxer(String name, int hp, int strange) throws WrongParameterException {
-        validateParameters(name, hp, strange);
-        this.name = name;
-        this.hp = hp;
-        this.strange = strange;
-    }
-
-    private void validateParameters(String name, int hp, int strange) throws WrongParameterException {
-        if (name == null || name.length() == 0) throw new WrongParameterException("Nieprawidlowa nazwa");
-        if (hp <= 0) throw new WrongParameterException("Nieprawidlowa wartosc HP");
-        if (strange <= 0) throw new WrongParameterException("Nieprawidlowa wartosc Strange");
-
+    @Override
+    public double getMaxHP() {
+        return maxHp;
     }
 
     @Override
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override

@@ -1,15 +1,29 @@
 package sda;
 
-import java.util.Random;
 import java.util.Scanner;
 
 public class HumanFighter implements IFighter {
     private String name;
     private int hp;
+    private final double maxHp;
     private int strange;
     private int stamina = 30;
 
     Scanner scanner = new Scanner(System.in);
+
+    public HumanFighter(String name, int hp, int strange) throws WrongParameterException {
+        validateParameters(name, hp, strange);
+        this.name = name;
+        this.hp = hp;
+        this.strange = strange;
+        this.maxHp = hp;
+    }
+
+    private void validateParameters(String name, int hp, int strange) throws WrongParameterException {
+        if (name == null || name.length() == 0) throw new WrongParameterException("Wrong name");
+        if (hp <= 0) throw new WrongParameterException("Wrong HP value");
+        if (strange <= 0) throw new WrongParameterException("Wrong Strange value");
+    }
 
     public void setStamina(int stamina) {
         this.stamina = stamina;
@@ -29,6 +43,11 @@ public class HumanFighter implements IFighter {
     @Override
     public void decreaseStamina(int stamina) {
         setStamina(getStamina() - stamina);
+    }
+
+    @Override
+    public double getMaxHP() {
+        return maxHp;
     }
 
     @Override
@@ -60,19 +79,9 @@ public class HumanFighter implements IFighter {
     }
 
 
-    public HumanFighter(String name, int hp, int strange) {
-        this.name = name;
-        this.hp = hp;
-        this.strange = strange;
-    }
-
     @Override
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     @Override

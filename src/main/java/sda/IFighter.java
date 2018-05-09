@@ -10,5 +10,5 @@ public interface IFighter {
     int getStrange();
     int getStamina();
     void decreaseStamina(int Stamina);
-
+    double getMaxHP();
 }

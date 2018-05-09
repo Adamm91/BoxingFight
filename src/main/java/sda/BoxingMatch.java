@@ -41,7 +41,9 @@ public class BoxingMatch implements IFight {
             HitOutcome hitOutcome= isHitSuccessfull(attack_f1, block_f2);
             int damage = checkDamage(first, second, hitOutcome);
             System.out.println(first.getName() + ": " + attack_f1 + " | " + block_f2 + " :" + second.getName() + ". Damage is: " + damage);
-            System.out.println(first.getName() + ": " + first.getHp() + " | " + second.getHp() + " :" + second.getName());
+
+//            System.out.println(first.getName() + ": " + first.getHp() + " | " + second.getHp() + " :" + second.getName());
+            System.out.println(first.getName() + ": " + showActualHp(first) + " # " + showActualHp(second) + " :" + second.getName());
             if (!second.isAlive()) {
                 winner = first;
                 break;
@@ -53,8 +55,7 @@ public class BoxingMatch implements IFight {
             damage = checkDamage(second, first, hitOutcome);
 
             System.out.println(second.getName() + ": " + attack_f2 + " | " + block_f1 + " :" + first.getName() + ". Damage is: " + damage);
-            System.out.println(first.getName() + ": " + first.getHp() + " | " + second.getHp() + " :" + second.getName());
-
+            System.out.println(first.getName() + ": " + showActualHp(first) + " # " + showActualHp(second) + " :" + second.getName());
             if (!first.isAlive()) {
                 winner = second;
                 break;
@@ -65,13 +66,38 @@ public class BoxingMatch implements IFight {
         System.out.println("The winner is " + winner.getName());
     }
 
+    private String showActualHp(IFighter fighter) {
+        int index = 0;
+        StringBuilder result = new StringBuilder();
+        if (fighter.getHp() > 0.9 * fighter.getMaxHP()) index = 10;
+        else if (fighter.getHp() > 0.8 * fighter.getMaxHP()) index = 9;
+        else if (fighter.getHp() > 0.7 * fighter.getMaxHP()) index = 8;
+        else if (fighter.getHp() > 0.6 * fighter.getMaxHP()) index = 7;
+        else if (fighter.getHp() > 0.5 * fighter.getMaxHP()) index = 6;
+        else if (fighter.getHp() > 0.4 * fighter.getMaxHP()) index = 5;
+        else if (fighter.getHp() > 0.3 * fighter.getMaxHP()) index = 4;
+        else if (fighter.getHp() > 0.2 * fighter.getMaxHP()) index = 3;
+        else if (fighter.getHp() > 0.1 * fighter.getMaxHP()) index = 2;
+        else if (fighter.getHp() > 0) index = 1;
+
+        result.append("|");
+        for (int i = 0; i < index; i++) {
+            result.append("X");
+        }
+        while (result.length() < 10) {
+            result.append(" ");
+        }
+        result.append("|");
+        return result.toString();
+    }
+
     private int checkDamage(IFighter attacker, IFighter casualty, HitOutcome hitOutcome) {
         int damage = 0;
         int stamina = 0;
         int killer = 2;
 
         if (HitOutcome.FULL.equals(hitOutcome)) {
-            damage = 5 + attacker.getStrange() / 10;
+            damage = 5;
             stamina = 2;
         }
         if (HitOutcome.PARTIPAL.equals(hitOutcome)) {
@@ -84,6 +110,7 @@ public class BoxingMatch implements IFight {
         }
         if (attacker.getStamina() < 15) damage /= 2;
         if (casualty.getHp() < 10) damage += killer;
+        damage += attacker.getStrange() / 10;
         casualty.decreaseHp(damage);
         attacker.decreaseStamina(stamina);
         return damage;
